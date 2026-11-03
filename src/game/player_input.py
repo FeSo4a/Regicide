@@ -92,7 +92,7 @@ def _play_card(player_deck: list, player_input: str, discard_pile: list) -> tupl
         return None
 
     # 统一去除空白内容转小写，并验证是否是joker
-    player_input: str = player_input.strip()
+    player_input: str = player_input.replace(' ', '')
     player_input: str = player_input.lower()
     if player_input == 'joker':
         return 'joker'
@@ -185,7 +185,7 @@ def _fold_cards(player_deck: list, damage: int, fold_input: str) -> Tuple(bool, 
         return False, None
 
     # 统一去除空白内容转小写
-    fold_input: str = fold_input.strip()
+    fold_input: str = fold_input.replace(' ', '')
     fold_input: str = fold_input.lower()
 
     input_list: list = list(fold_input)
