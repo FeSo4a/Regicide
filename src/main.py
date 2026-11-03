@@ -5,6 +5,11 @@ import sys
 
 
 def main() -> None:
+    """
+    程序入口和主函数。
+
+    :return: None
+    """
     parser: argparse.ArgumentParser = set_main_parser()
     parser.parse_args()
 

@@ -2,6 +2,11 @@ import argparse
 
 
 def set_main_parser() -> argparse.ArgumentParser:
+    """
+    添加CLI命令行主parser
+
+    :return: 一个parser类，供main调用
+    """
     main_parser = argparse.ArgumentParser(
         description='''
         弑君者 | 改编自桌游 | By FeSo4a

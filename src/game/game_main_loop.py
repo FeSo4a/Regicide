@@ -4,38 +4,66 @@ from .screen import _print_screen, _clear_screen
 
 
 def game_loop() -> None:
+    """
+    游戏主循环接口，供main调用
+
+    :return: None
+    """
+    # 随机生成卡组
     deck, boss_deck = _summon_card()
     deck, boss_deck = _set_random_deck(deck, boss_deck)
-    joker_count: int = 2
-
+    # 初始化弃牌堆、boss牌和玩家手牌
     discard_pile: list = []
     player_deck: list = []
     _draw_card(deck, player_deck, 8)
     boss_list: None | list = None
+    # 初始化玩家底牌数量和护甲
+    joker_count: int = 2
     armor: int = 0
 
+    # 游戏主循环
     while True:
-        _clear_screen()
+        _clear_screen()  # 清屏
         if boss_list is None and len(boss_deck) > 0:
-            boss_list: None | list = _summon_boss(boss_deck)
-        elif boss_list is None and len(boss_deck) == 0:
+            boss_list: None | list = _summon_boss(boss_deck)  # 如果当前Boss没了就抽一张
+        elif boss_list is None and len(boss_deck) == 0:  # 如果所有Boss都没了则胜利
             # TODO: 胜利界面
             pass
 
         # noinspection bad-argument-type
+        # 出牌阶段
         _print_screen(boss_deck, boss_list, player_deck, discard_pile, deck, joker_count, armor)
         user_input = input('请输入要出牌的序列号，如果要出多张牌请勿分割：\n')
         result = _play_card(player_deck, user_input)
 
-        if result is None:
+        if result is None:  # 输入不合法
             continue
 
         elif result == 'joker':
             # TODO: 小丑牌逻辑
+            _clear_screen()
             print('你出了小丑牌')
             input()
 
+        # 发动技能阶段
+        _clear_screen()
         suit, rank = result
         print(f'你出了{rank}点数！')
         print(f'你发动了{suit}花色技能！')
-        input(f'回车确认')
+        double_attack = False  # 两倍攻击标记，留给攻击阶段
+
+        if '♠' in suit:
+            armor += rank  # 增加防御，一个Boss死亡才会重置
+            print(f'你增加了{rank}点防御！现在是{armor}点防御。')
+        if '♥' in suit:
+            # TODO: 恢复技能
+            pass
+        if '♦' in suit:
+            if len(player_deck) + rank > 8:  # 如果抽牌到上限则抽到上限
+                add_card_count = 8 - len(player_deck)
+            else:
+                add_card_count = rank
+            _draw_card(deck, player_deck, add_card_count)
+            print(f'你抽取了{add_card_count}张卡牌！')
+        if '♣' in suit:
+            double_attack = True  # 两倍攻击标记
