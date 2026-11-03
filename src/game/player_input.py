@@ -119,7 +119,7 @@ def _play_card(player_deck: list, player_input: str, discard_pile: list) -> tupl
 
     try:
         suit, rank = _check_card(return_card)  # 送入比较函数校验并得出花色及总值。
-        for i in input_number:
+        for i in sorted(input_number, reverse=True):
             discard_pile.append(player_deck.pop(i - 1))
         return suit, rank
     except ValueError:
@@ -171,7 +171,7 @@ def _check_if_can_fold(player_deck: list, damage: int) -> bool:
     return sum_rank > damage
 
 
-def _fold_cards(player_deck: list, damage: int, fold_input: str) -> Tuple(bool, list | None):
+def _fold_cards(player_deck: list, damage: int, fold_input: str) -> Tuple[bool, list | None]:
     """
     检测玩家弃牌合法性的函数
 

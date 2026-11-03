@@ -120,6 +120,6 @@ def game_loop() -> None:
             fold_input = input('请弃掉比伤害数量大的牌，可弃多张：\n')
             true_input, fold_input_num = _fold_cards(player_deck, damage, fold_input)  # 检测弃牌合法性
         # 弃牌
-        for i in fold_input_num:
+        for i in sorted(fold_input_num, reverse=True):
             discard_pile.append(player_deck.pop(i - 1))
         input('回车确认')
