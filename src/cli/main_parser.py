@@ -1,0 +1,13 @@
+import argparse
+
+
+def set_main_parser() -> argparse.ArgumentParser:
+    main_parser = argparse.ArgumentParser(
+        description='''
+        弑君者 | 改编自桌游 | By FeSo4a
+        '''
+    )
+
+    main_parser.add_argument('-v', '--version', action='version', version='1.0')
+
+    return main_parser
