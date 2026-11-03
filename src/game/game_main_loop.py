@@ -34,7 +34,7 @@ def game_loop() -> None:
         # 出牌阶段
         _print_screen(boss_deck, boss_list, player_deck, discard_pile, deck, joker_count, armor)
         user_input = input('请输入要出牌的序列号，如果要出多张牌请勿分割：\n')
-        result = _play_card(player_deck, user_input)
+        result = _play_card(player_deck, user_input, discard_pile)
 
         if result is None:  # 输入不合法
             continue
