@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 
 
 def _draw_card(deck: list, player_deck: list, count: int) -> None:
@@ -140,3 +141,90 @@ def _discard_pile_to_deck(deck: list, discard_pile: list, count: int) -> None:
         count = len(discard_pile)
     for _ in range(count):
         deck.append(discard_pile.pop(0))
+
+
+def _check_if_can_fold(player_deck: list, damage: int) -> bool:
+    """
+    校验玩家是否死亡的函数
+
+    :param player_deck: 玩家的手牌
+    :param damage: Boss的伤害
+    :return: True/False
+    """
+    rank: list = [i[1] for i in player_deck]
+
+    while 'A' in rank:
+        rank.remove('A')
+        rank.append('1')
+    while 'J' in rank:
+        rank.remove('J')
+        rank.append('10')
+    while 'Q' in rank:
+        rank.remove('Q')
+        rank.append('15')
+    while 'K' in rank:
+        rank.remove('K')
+        rank.append('20')
+
+    rank: list = [int(i) for i in rank]
+    sum_rank: int = sum(rank)
+    return sum_rank > damage
+
+
+def _fold_cards(player_deck: list, damage: int, fold_input: str) -> Tuple(bool, list | None):
+    """
+    检测玩家弃牌合法性的函数
+
+    :param player_deck: 玩家手牌
+    :param damage: Boss造成的伤害
+    :param fold_input: 玩家的输入
+    :return: True/False | 提取到的输入
+    """
+    if fold_input == '':  # 输入为空时
+        input('输入有误，请按回车再试一次')
+        return False, None
+
+    # 统一去除空白内容转小写
+    fold_input: str = fold_input.strip()
+    fold_input: str = fold_input.lower()
+
+    input_list: list = list(fold_input)
+    input_list = list(set(input_list))  # 将输入转为列表，并去除重复元素
+
+    # noinspection broad-exception
+    # 尝试将输入列表中所有项都转为int
+    try:
+        input_number: list = [int(i) for i in input_list]
+    except Exception:
+        input('输入有误，请按回车再确认一次。')
+        return False, None
+
+    return_card: list = []
+    # noinspection broad-exception
+    try:
+        for i in input_number:
+            return_card.append(player_deck[i - 1])
+    except Exception:
+        input('输入有误，请按回车再确认一次。')
+        return False, None
+
+    rank: list = [i[1] for i in return_card]
+
+    while 'A' in rank:
+        rank.remove('A')
+        rank.append('1')
+    while 'J' in rank:
+        rank.remove('J')
+        rank.append('10')
+    while 'Q' in rank:
+        rank.remove('Q')
+        rank.append('15')
+    while 'K' in rank:
+        rank.remove('K')
+        rank.append('20')
+
+    rank: list = [int(i) for i in rank]
+    if sum(rank) < damage:
+        input('输入有误，请按回车再确认一次。')
+        return False, None
+    return True, input_number

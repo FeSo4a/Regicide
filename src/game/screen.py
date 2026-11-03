@@ -29,6 +29,18 @@ def _print_screen(boss_deck: list, boss_list: list, player_deck: list, discard_p
     print()
 
 
+def _print_player_deck(player_deck: list) -> None:
+    """
+    显示手牌信息
+
+    :param player_deck: 玩家手牌情况
+    :return: None
+    """
+    for i in range(len(player_deck)):
+        print(f'[{i + 1}] {player_deck[i]}', end=' ')
+    print()
+
+
 # noinspection deprecation
 def _clear_screen() -> None:
     """

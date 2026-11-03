@@ -1,6 +1,6 @@
 from .summon_card_list import _set_random_deck, _summon_card, _summon_boss
-from .player_input import _draw_card, _play_card, _discard_pile_to_deck
-from .screen import _print_screen, _clear_screen
+from .player_input import _draw_card, _play_card, _discard_pile_to_deck, _check_if_can_fold, _fold_cards
+from .screen import _print_screen, _clear_screen, _print_player_deck
 
 
 def game_loop() -> None:
@@ -28,7 +28,7 @@ def game_loop() -> None:
             boss_list: None | list = _summon_boss(boss_deck)  # 如果当前Boss没了就抽一张
         elif boss_list is None and len(boss_deck) == 0:  # 如果所有Boss都没了则胜利
             # TODO: 胜利界面
-            pass
+            return
 
         # noinspection bad-argument-type
         # 出牌阶段
@@ -70,3 +70,54 @@ def game_loop() -> None:
             print(f'你抽取了{add_card_count}张卡牌！')
         if '♣' in suit:
             double_attack = True  # 两倍攻击标记
+            print(f'攻击力增强成功！')
+        input('回车确认')
+
+        # 攻击Boss阶段
+        _clear_screen()
+        if double_attack:
+            boss_list[2] = boss_list[2] - rank * 2
+            print(f'双倍伤害！你对Boss造成了{rank * 2}点伤害！')
+        else:
+            boss_list[2] = boss_list[2] - rank
+            print(f'你对Boss造成了{rank}点伤害！')
+        # 校验Boss是否死亡
+        if boss_list[2] < 0:
+            print(f'Boss死亡！')
+            discard_pile.append(f'{boss_list[0]}{boss_list[1]}')  # 存入弃牌区
+            # 重置护甲和boss栏
+            boss_list: None | list = None
+            armor: int = 0
+            continue
+        elif boss_list[2] == 0:
+            print(f'Boss血量恰为0，你感化了Boss！')
+            deck.insert(0, f'{boss_list[0]}{boss_list[1]}')  # 放在牌库头，下一回合就能抽到
+            # 重置护甲和boss栏
+            boss_list: None | list = None
+            armor: int = 0
+            continue
+        input('回车确认')
+
+        # Boss反击阶段
+        _clear_screen()
+        damage: int = boss_list[3] - armor
+        if damage < 0:
+            damage = 0
+        print(f'Boss对你造成了{damage}点伤害！')
+        if damage == 0:
+            continue
+        # 从手牌中弃掉比damage大的手牌
+        can_fold = _check_if_can_fold(player_deck, damage)
+        if not can_fold:
+            # TODO: 失败界面
+            return
+        # 输出手牌并让用户输入
+        _print_player_deck(player_deck)
+        true_input = False
+        while not true_input:
+            fold_input = input('请弃掉比伤害数量大的牌，可弃多张：\n')
+            true_input, fold_input_num = _fold_cards(player_deck, damage, fold_input)  # 检测弃牌合法性
+        # 弃牌
+        for i in fold_input_num:
+            discard_pile.append(player_deck.pop(i - 1))
+        input('回车确认')
