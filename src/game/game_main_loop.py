@@ -1,5 +1,5 @@
 from .summon_card_list import _set_random_deck, _summon_card, _summon_boss
-from .player_input import _draw_card, _play_card
+from .player_input import _draw_card, _play_card, _discard_pile_to_deck
 from .screen import _print_screen, _clear_screen
 
 
@@ -52,12 +52,15 @@ def game_loop() -> None:
         print(f'你发动了{suit}花色技能！')
         double_attack = False  # 两倍攻击标记，留给攻击阶段
 
+        # 如果攻击者的花色和boss一样，那么该技能不会被发动。
+        suit = suit.replace(boss_list[0], '')
+
         if '♠' in suit:
             armor += rank  # 增加防御，一个Boss死亡才会重置
             print(f'你增加了{rank}点防御！现在是{armor}点防御。')
         if '♥' in suit:
-            # TODO: 恢复技能
-            pass
+            _discard_pile_to_deck(deck, discard_pile, rank)
+            print(f'已将弃牌区中的{rank}张牌加入牌库！')
         if '♦' in suit:
             if len(player_deck) + rank > 8:  # 如果抽牌到上限则抽到上限
                 add_card_count = 8 - len(player_deck)

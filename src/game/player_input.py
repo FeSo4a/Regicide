@@ -1,3 +1,6 @@
+import random
+
+
 def _draw_card(deck: list, player_deck: list, count: int) -> None:
     """
     抽牌逻辑
@@ -74,12 +77,13 @@ def _check_card(card: list) -> tuple:
     return suit, rank
 
 
-def _play_card(player_deck: list, player_input: str) -> tuple | None | str:
+def _play_card(player_deck: list, player_input: str, discard_pile: list) -> tuple | None | str:
     """
     获取并处理玩家输入
 
     :param player_deck: 玩家手牌
     :param player_input: 玩家输入的序列号，可能为数字组合、joker、或者其他
+    :param discard_pile: 弃牌区
     :return: 为joker的时候直接返回字符串、有误时返回None、正常状况返回元组，装有suit花色和rank数字的
     """
     if player_input == '':  # 输入为空时
@@ -115,8 +119,24 @@ def _play_card(player_deck: list, player_input: str) -> tuple | None | str:
     try:
         suit, rank = _check_card(return_card)  # 送入比较函数校验并得出花色及总值。
         for i in input_number:
-            del player_deck[i - 1]
+            discard_pile.append(player_deck.pop(i - 1))
         return suit, rank
     except ValueError:
         input('出牌有误，请按回车再确认一次')
         return None
+
+
+def _discard_pile_to_deck(deck: list, discard_pile: list, count: int) -> None:
+    """
+    将弃牌区的牌打乱后随机选出上面的几个牌放回牌库底端
+
+    :param deck: 牌库
+    :param discard_pile: 弃牌区
+    :param count: 要选几个牌
+    :return: None
+    """
+    random.shuffle(discard_pile)
+    if count > len(discard_pile):
+        count = len(discard_pile)
+    for _ in range(count):
+        deck.append(discard_pile.pop(0))
