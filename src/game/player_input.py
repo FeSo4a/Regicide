@@ -208,7 +208,7 @@ def _fold_cards(player_deck: list, damage: int, fold_input: str) -> Tuple(bool, 
         input('输入有误，请按回车再确认一次。')
         return False, None
 
-    rank: list = [i[1] for i in return_card]
+    rank: list = [i[1:] for i in return_card]
 
     while 'A' in rank:
         rank.remove('A')

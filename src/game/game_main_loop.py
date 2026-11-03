@@ -1,6 +1,6 @@
 from .summon_card_list import _set_random_deck, _summon_card, _summon_boss
 from .player_input import _draw_card, _play_card, _discard_pile_to_deck, _check_if_can_fold, _fold_cards
-from .screen import _print_screen, _clear_screen, _print_player_deck
+from .screen import _print_screen, _clear_screen, _print_player_deck, _show_win_screen, _show_lose_screen
 
 
 def game_loop() -> None:
@@ -27,7 +27,7 @@ def game_loop() -> None:
         if boss_list is None and len(boss_deck) > 0:
             boss_list: None | list = _summon_boss(boss_deck)  # 如果当前Boss没了就抽一张
         elif boss_list is None and len(boss_deck) == 0:  # 如果所有Boss都没了则胜利
-            # TODO: 胜利界面
+            _show_win_screen(joker_count, player_deck)
             return
 
         # noinspection bad-argument-type
@@ -111,7 +111,7 @@ def game_loop() -> None:
         # 从手牌中弃掉比damage大的手牌
         can_fold = _check_if_can_fold(player_deck, damage)
         if not can_fold:
-            # TODO: 失败界面
+            _show_lose_screen(boss_deck)
             return
         # 输出手牌并让用户输入
         _print_player_deck(player_deck)
