@@ -23,7 +23,7 @@ def _print_screen(boss_deck: list, boss_list: list, player_deck: list, discard_p
     print(f'卡池情况：{len(deck)} 剩余卡牌 | {len(discard_pile)} 弃牌区')
     print()
     print(f'玩家护甲：{armor}')
-    print(f'玩家剩余底牌：{joker_count}')
+    print(f'玩家剩余底牌：{joker_count} （出牌阶段输入joker即可使用）')
     for i in range(len(player_deck)):
         print(f'[{i + 1}] {player_deck[i]}', end=' ')
     print()
