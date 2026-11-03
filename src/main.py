@@ -1,5 +1,6 @@
 from cli import set_main_parser
 from game import game_loop
+from config import setup_dual_logging
 import argparse
 import sys
 
