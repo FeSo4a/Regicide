@@ -5,4 +5,4 @@ log/
 .idea/
 src/config.json
 .venv/
-main.spec
+*.spec

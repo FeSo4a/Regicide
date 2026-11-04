@@ -16,6 +16,6 @@ def set_main_parser() -> argparse.ArgumentParser:
     sub_parser = main_parser.add_subparsers(dest='command')
     _set_config_parser(sub_parser)
 
-    main_parser.add_argument('-v', '--version', action='version', version='1.0')
+    main_parser.add_argument('-v', '--version', action='version', version='1.0.1')
 
     return main_parser

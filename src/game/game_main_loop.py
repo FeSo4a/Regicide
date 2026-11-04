@@ -59,12 +59,15 @@ def game_loop() -> None:
         _clear_screen()
         suit, rank = result
         print(f'你出了{rank}点数！')
-        double_attack = False  # 两倍攻击标记，留给攻击阶段
+        double_attack: bool = False  # 两倍攻击标记，留给攻击阶段
 
         # 如果攻击者的花色和boss一样，那么该技能不会被发动。
         if not no_suit:
-            suit = suit.replace(boss_list[0], '')
-        print(f'你发动了{suit}花色技能！')
+            suit: str = suit.replace(boss_list[0], '')
+        if len(suit) == 0:
+            print(f'花色技能被Boss阻挡！！！')
+        else:
+            print(f'你发动了{suit}花色技能！')
 
         if '♠' in suit:
             armor += rank  # 增加防御，一个Boss死亡才会重置
