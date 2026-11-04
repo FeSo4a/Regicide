@@ -1,6 +1,8 @@
 __pycache__/
-dict/
+dist/
+build/
 log/
 .idea/
 src/config.json
 .venv/
+main.spec
