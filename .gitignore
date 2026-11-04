@@ -3,3 +3,4 @@ dict/
 log/
 .idea/
 src/config.json
+.venv/
