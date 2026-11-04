@@ -1,5 +1,5 @@
 from .summon_card_list import _set_random_deck, _summon_card, _summon_boss
-from .player_input import _draw_card, _play_card, _discard_pile_to_deck, _check_if_can_fold, _fold_cards
+from .player_input import _draw_card, _play_card, _discard_pile_to_deck, _check_if_can_fold, _fold_cards, _use_joker
 from .screen import _print_screen, _clear_screen, _print_player_deck, _show_win_screen, _show_lose_screen
 
 
@@ -20,6 +20,7 @@ def game_loop() -> None:
     # 初始化玩家底牌数量和护甲
     joker_count: int = 2
     armor: int = 0
+    no_suit: bool = False
 
     # 游戏主循环
     while True:
@@ -29,6 +30,7 @@ def game_loop() -> None:
         elif boss_list is None and len(boss_deck) == 0:  # 如果所有Boss都没了则胜利
             _show_win_screen(joker_count, player_deck)
             return
+        form: str | None = None  # 这是小丑牌型式标记
 
         # noinspection bad-argument-type
         # 出牌阶段
@@ -40,10 +42,18 @@ def game_loop() -> None:
             continue
 
         elif result == 'joker':
-            # TODO: 小丑牌逻辑
-            _clear_screen()
-            print('你出了小丑牌')
-            input()
+            if joker_count <= 0:
+                print('小丑牌已出完！')
+                input('回车确认')
+                continue
+            joker_count -= 1
+            while form is None:
+                _clear_screen()
+                form: str | None = _use_joker(player_deck, discard_pile, joker_count, deck)
+            input('回车确认')
+            if form == 'suit':
+                no_suit = True
+            continue
 
         # 发动技能阶段
         _clear_screen()
@@ -52,7 +62,8 @@ def game_loop() -> None:
         double_attack = False  # 两倍攻击标记，留给攻击阶段
 
         # 如果攻击者的花色和boss一样，那么该技能不会被发动。
-        suit = suit.replace(boss_list[0], '')
+        if not no_suit:
+            suit = suit.replace(boss_list[0], '')
         print(f'你发动了{suit}花色技能！')
 
         if '♠' in suit:
@@ -88,6 +99,7 @@ def game_loop() -> None:
             # 重置护甲和boss栏
             boss_list: None | list = None
             armor: int = 0
+            no_suit = False
             input('回车确认')
             continue
         elif boss_list[2] == 0:
@@ -96,6 +108,7 @@ def game_loop() -> None:
             # 重置护甲和boss栏
             boss_list: None | list = None
             armor: int = 0
+            no_suit = False
             input('回车确认')
             continue
         input('回车确认')

@@ -228,3 +228,33 @@ def _fold_cards(player_deck: list, damage: int, fold_input: str) -> Tuple[bool, 
         input('输入有误，请按回车再确认一次。')
         return False, None
     return True, input_number
+
+
+def _use_joker(player_deck: list, discard_pile: list, joker_count: int, deck: list) -> str | None:
+    """
+    玩家使用小丑牌的逻辑
+
+    :param player_deck: 玩家的牌组
+    :param discard_pile: 弃牌堆
+    :param joker_count: 剩余小丑牌张数
+    :param deck: 牌堆
+    :return: 若有误，则输出None | 否则输出str标识，pile为弃牌，suit为无效化花色
+    """
+    print('要发动哪种效果？')
+    print('[1] 将手牌全部弃掉，并抽到手牌上限')
+    print('[2] 将本轮Boss的花色无效化')
+    form: str = input().strip()
+
+    match form:
+        case '1':
+            discard_pile += player_deck
+            player_deck.clear()
+            _draw_card(deck, player_deck, 8)
+            print('手牌已置换成功！')
+            return 'pile'
+        case '2':
+            print('已将本轮Boss花色无效化')
+            return 'suit'
+        case _:
+            input('输入有误，请按回车再试一次。')
+            return None
