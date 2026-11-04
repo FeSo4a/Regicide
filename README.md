@@ -25,6 +25,21 @@
     ```bash
     python main.py
     ```
+  
+#### 运行示例
+
+- 若不想指定参数，双击main.py/exe文件打开即可
+- 想修改配置时，在cmd中输入以下内容即可查看说明
+```bash
+cd src
+python main.py -h 
+```
+- 修改配置示例
+```bash
+cd src
+python main.py config -l ../log # 设置日志的路径
+python main.py config -o y  # 开启记录日志的功能
+```
 
 #### 运行示例
 
